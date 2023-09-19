@@ -35,7 +35,7 @@ def dotOffset(dot, character_width_in_pixels, character_height_in_pixels):
 @click.option('--width', default=40, help="The width of the art in characters", type=int)
 @click.option('--aspect', default=1.3, help="The ratio of character height to character width", type=float)
 @click.option('--threshold', default=0.5, help="The value threshold for white", type=float)
-@click.option('--invert', default=False, help="The ratio of character height to character width", type=float)
+@click.option('--invert', default=False, help="The ratio of character height to character width", type=bool)
 def main(filepath, width, aspect, threshold, invert):
 	width_in_characters = width
 	character_aspect_ratio = aspect
