@@ -31,16 +31,19 @@ def dotOffset(dot, character_width_in_pixels, character_height_in_pixels):
 	return (x_offset, y_offset)
 
 @click.command()
-@click.option('--filepath', help="The path to the image to blind", prompt=True, required=True, type=str)
+@click.option('--input', help="The path to the image to blind", prompt=True, required=True, type=str)
 @click.option('--width', default=40, help="The width of the art in characters", type=int)
 @click.option('--aspect', default=1.3, help="The ratio of character height to character width", type=float)
 @click.option('--threshold', default=0.5, help="The value threshold for white", type=float)
-@click.option('--invert', default=False, help="The ratio of character height to character width", type=bool)
-def main(filepath, width, aspect, threshold, invert):
+@click.option('--invert', default=False, help="Invert white and black", type=bool, is_flag=True)
+@click.option('--output', default='-', help="The path to output to", type=str)
+def main(input, width, aspect, threshold, invert, output):
 	width_in_characters = width
 	character_aspect_ratio = aspect
+	
+	braille = ""
 
-	with Image.open(filepath) as image:
+	with Image.open(input) as image:
 		height_in_characters = int((image.height / image.width) * width_in_characters / character_aspect_ratio)
 		character_width_in_pixels = int(image.width / width_in_characters)
 		character_height_in_pixels = int(image.height / height_in_characters)
@@ -61,8 +64,13 @@ def main(filepath, width, aspect, threshold, invert):
 						v = 1 - v
 					if v < threshold:
 						character_string += str(dot+1)
-				print(chr(calculateBraille(character_string)), end='')
-			print()
+				braille += chr(calculateBraille(character_string))
+			braille += '\n'
+		if output == '-':
+			print(braille)
+		else:
+			with open(output, 'w') as text:
+				text.write(braille)
 
 if __name__ == '__main__':
 	main()
